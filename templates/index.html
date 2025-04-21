@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>料理マイスター - スマートレシピ生成器</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>料理マイスター</h1>
+            <p class="subtitle">AI搭載スマートレシピ生成器</p>
+        </header>
+
+        <div class="recipe-generator">
+            <form id="recipe-form">
+                <div class="form-group">
+                    <label for="dish_name">料理名</label>
+                    <div class="input-with-button">
+                        <input type="text" id="dish_name" placeholder="例: カレーライス、パスタ、オムライス..." required>
+                        <button type="button" id="suggestion-btn" title="料理名の提案をする"><i class="fas fa-random"></i></button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dietary_restrictions">食事制限（任意）</label>
+                    <select id="dietary_restrictions">
+                        <option value="">なし</option>
+                        <option value="ベジタリアン">ベジタリアン</option>
+                        <option value="ヴィーガン">ヴィーガン</option>
+                        <option value="グルテンフリー">グルテンフリー</option>
+                        <option value="低糖質">低糖質</option>
+                        <option value="低カロリー">低カロリー</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="cooking_time">調理時間</label>
+                        <select id="cooking_time">
+                            <option value="任意">任意</option>
+                            <option value="15分以内">15分以内</option>
+                            <option value="30分以内">30分以内</option>
+                            <option value="1時間以内">1時間以内</option>
+                            <option value="1時間以上">1時間以上</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group half">
+                        <label for="difficulty">難易度</label>
+                        <select id="difficulty">
+                            <option value="任意">任意</option>
+                            <option value="初心者">初心者</option>
+                            <option value="中級者">中級者</option>
+                            <option value="上級者">上級者</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">レシピを生成 <i class="fas fa-utensils"></i></button>
+                </div>
+            </form>
+
+            <div id="loading" class="loading hidden">
+                <i class="fas fa-spinner fa-spin"></i> レシピを生成中...
+            </div>
+
+            <div id="result" class="hidden">
+                <div class="result-header">
+                    <h2 id="recipe-title"></h2>
+                    <button id="print-btn" class="btn-icon" title="印刷する"><i class="fas fa-print"></i></button>
+                </div>
+                <div id="recipe" class="recipe-content"></div>
+            </div>
+        </div>
+
+        <div class="recipe-history">
+            <div class="history-header">
+                <h3>過去のレシピ</h3>
+                <button id="clear-history-btn" class="btn-text">履歴を消去</button>
+            </div>
+            <div id="history-list">
+                {% if history %}
+                    {% for item in history %}
+                        <div class="history-item" data-recipe="{{ item.recipe|tojson }}">
+                            <span class="history-dish-name">{{ item.dish_name }}</span>
+                            {% if item.dietary_restrictions %}
+                                <span class="history-tag">{{ item.dietary_restrictions }}</span>
+                            {% endif %}
+                            {% if item.cooking_time != '任意' %}
+                                <span class="history-tag">{{ item.cooking_time }}</span>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="empty-history">
+                        <p>レシピを生成するとここに履歴が表示されます</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2025 料理マイスター - すべての権利予約</p>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
